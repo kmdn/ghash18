@@ -69,7 +69,7 @@ public class KrisMain {
             }
 
             //Vehicles are created on the fly
-            final ArrayList<Vehicle> vehicles = new ArrayList<>();
+            //final ArrayList<Vehicle> vehicles = new ArrayList<>();
 
             /*
             FIRST LINE
@@ -159,9 +159,14 @@ public class KrisMain {
 
             }*/
 
+            final ArrayList<Vehicle> vehicles = new ArrayList<>();
+            for (int i =0; i<F; i++){
+                Vehicle v = new Vehicle();
+                vehicles.add(v);
+            }
           greedy(vehicles,rides);
 
-          
+
             //TODO: WRITE OUTPUT TO FILE
             out = new BufferedWriter(new FileWriter(outFile));
             out.write("THIS IS MY OUTPUT");
