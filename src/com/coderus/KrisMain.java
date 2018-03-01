@@ -1,8 +1,7 @@
 package com.coderus;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.util.ArrayList;
 
 public class KrisMain {
     public static void main(String[] args) {
@@ -24,16 +23,32 @@ public class KrisMain {
         ● f – the latest finish (0 ≤ f ≤ T), (f ≥ s + | − a + | − b|)
 
          */
+        int R, C, F, N, B, T;
+
         final String filename = "small.in";
-        FileOutputStream out = null;
-        FileInputStream in = null;
+        BufferedWriter out = null;
+        BufferedReader in = null;
         File file;
-
+        final ArrayList<String> lines = new ArrayList<String>();
         try {
+            String line = null;
             file = new File(filename +".out");
-            in = new FileInputStream(file);
+            in = new BufferedReader(new FileReader(file));
             //TODO: READ THE F'ING FILE
+            boolean firstLine = true;
+            do {
+                line = in.readLine();
+                if (firstLine)
+                {
+                    //Tokenize first line
 
+                    firstLine = false;
+                }
+                else
+                {
+                    //It's any of the non-first lines
+                }
+            } while(line != null);
             in.close();
             if (!file.exists()) {
                 file.createNewFile();
@@ -46,8 +61,8 @@ public class KrisMain {
 
 
             //TODO: WRITE OUTPUT TO FILE
-            out = new FileOutputStream(file);
-            out.write(" ".getBytes());
+            out = new BufferedWriter(new FileWriter(file));
+            out.write("THIS IS MY OUTPUT");
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
