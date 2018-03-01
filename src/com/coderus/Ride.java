@@ -3,6 +3,7 @@ package com.coderus;
 import java.io.Serializable;
 
 public class Ride implements Comparable, Serializable {
+    public int ID = -1;
     public int startX = -1;
     public int startY = -1;
     public int endX = -1;
@@ -29,7 +30,12 @@ public class Ride implements Comparable, Serializable {
         {
             final Ride castO = (Ride) o;
             //If data is consistent, this should lead to bonsuLatestStartTime to always be taken
-            return Math.min(castO.latestStartTime, castO.bonusLatestStartTime) - Math.min(latestStartTime, bonusLatestStartTime);
+
+            //11kk score
+            //return Math.min(castO.latestStartTime, castO.bonusLatestStartTime) - Math.min(latestStartTime, bonusLatestStartTime);
+
+            return castO.startStep - startStep;//e goes up, but all others go down
+
         }
         return 0;
     }

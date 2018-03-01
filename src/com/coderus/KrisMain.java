@@ -3,12 +3,27 @@ package com.coderus;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class KrisMain {
     public static void main(String[] args) {
-        final int R, C, F, N, B, T;
 
-        final String filename = "./resources/a_example.in";
+        final String f1 = "./resources/a_example.in";
+        final String f2 = "./resources/b_should_be_easy.in";
+        final String f3 = "./resources/c_no_hurry.in";
+        final String f4 = "./resources/d_metropolis.in";
+        final String f5 = "./resources/e_high_bonus.in";
+        final String[] files = new String[]{f1, f2, f3, f4, f5};
+        for (String f : files)
+        {
+            computeItForOneFile(f);
+        }
+        System.out.println("Hello Worldy -joni");
+    }
+
+    public static void computeItForOneFile(final String filename)
+    {
+        final int R, C, F, N, B, T;
         final File outFile = new File(filename+".out");
         BufferedWriter out = null;
         BufferedReader in = null;
@@ -20,6 +35,7 @@ public class KrisMain {
             //TODO: READ THE FUN FILE!
             String line = null;
             line = in.readLine();
+            int lineCounter = 0;
             //Tokenize first line
             /*
             R = # rows
@@ -51,6 +67,8 @@ public class KrisMain {
                     ● f – the latest finish (0 ≤ f ≤ T), (f ≥ s + | − a + | − b|)
                  */
                 tokens = line.split(" ");
+                r.ID = lineCounter;
+                lineCounter++;
                 r.startX = Integer.parseInt(tokens[0]);
                 r.startY = Integer.parseInt(tokens[1]);
                 r.endX = Integer.parseInt(tokens[2]);
@@ -163,8 +181,6 @@ public class KrisMain {
 
             //TODO: WRITE OUTPUT TO FILE
             out = new BufferedWriter(new FileWriter(outFile));
-            out.write("THIS IS MY OUTPUT");
-            out.close();
             System.out.println("Vehicles used: "+vehicles.size());
             int sumRidesAssigned = 0;
             for (Vehicle v : vehicles)
@@ -172,12 +188,21 @@ public class KrisMain {
                 sumRidesAssigned += v.rides.size();
             }
             System.out.println("Total rides assigned: "+sumRidesAssigned);
+            for (Vehicle v : vehicles)
+            {
+                String ridesStr = "";
+                for (Ride r : v.rides)
+                {
+                    ridesStr += " "+r.ID;
+                }
+                out.write(v.rides.size()+ridesStr+System.getProperty("line.separator"));
+            }
+            out.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("Hello Worldy -joni");
     }
 
     public static int computeCostToStartOfRide(final Vehicle vehicle, final Ride ride)
