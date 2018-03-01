@@ -176,8 +176,16 @@ public class KrisMain {
 
             }
 
-
-
+            //Gui's code START
+            if (false) {
+                final ArrayList<Vehicle> vehicles = new ArrayList<>();
+                for (int i = 0; i < F; i++) {
+                    Vehicle v = new Vehicle();
+                    vehicles.add(v);
+                }
+                greedy(vehicles, rides);
+            }
+            //Gui's code END
 
             //TODO: WRITE OUTPUT TO FILE
             out = new BufferedWriter(new FileWriter(outFile));
@@ -219,5 +227,70 @@ public class KrisMain {
     public static int distance(int x1, int y1, int x2, int y2)
     {
         return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+    }
+
+    private static int[] computePoints(Vehicle vehicle, Ride ride){
+        int solution[] = new int[2];
+        int distance = manhattanDistance(vehicle.posX, vehicle.posY,ride.startX, ride.startY); //distance = time to get there
+        int startStep = distance + vehicle.whenAvailable;
+        if (startStep<ride.startStep){
+            startStep = ride.startStep;
+        }
+        int finishStep = startStep + distance;
+
+        if (finishStep<ride.latestFinish) {
+            if (startStep == ride.startStep) {
+                solution[0]=ride.cost +2;
+                solution[1]=finishStep;
+            } else {
+                solution[0]=ride.cost;
+                solution[1]=finishStep;
+            }
+        } else {
+            solution[0]=0;
+            solution[1]=finishStep;
+        }
+        return solution;
+
+    }
+
+    private static int manhattanDistance(int xA, int yA, int xB, int yB){
+        return Math.abs(xA-xB) + Math.abs(yA-yB);
+    }
+
+    private static void assignRide(ArrayList<Vehicle> vehicles, ArrayList<Ride> free_rides){
+        Vehicle best_vehicle = vehicles.get(0);
+        Ride best_ride = free_rides.get(0);
+        int best_end_step = 0;
+        int best_points = 0;
+        for (Vehicle vehicle : vehicles) {
+            for (Ride ride : free_rides) {
+                int[] points_computation = computePoints(vehicle, ride);
+                int points = points_computation[0];
+                int time = points_computation[1];
+                if (points > best_points) {
+                    best_vehicle = vehicle;
+                    best_ride = ride;
+                    best_points = points;
+                    best_end_step = time;
+                }
+            }
+        }
+        best_vehicle.rides.add(best_ride);
+        best_vehicle.posX=best_ride.endX;
+        best_vehicle.posY=best_ride.endY;
+        best_vehicle.isAvailable(best_end_step);
+        free_rides.remove(best_ride);
+
+        //there's no possible way to finish rides
+        if (best_points==0){
+            free_rides.clear();
+        }
+    }
+
+    private static void greedy(ArrayList<Vehicle> vehicles, ArrayList<Ride> free_rides){
+        while (free_rides.size()>0){
+            assignRide(vehicles,free_rides);
+        }
     }
 }
