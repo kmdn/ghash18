@@ -14,14 +14,17 @@ public class KrisMain {
         final String f4 = "./resources/d_metropolis.in";
         final String f5 = "./resources/e_high_bonus.in";
         final String[] files = new String[]{f1, f2, f3, f4, f5};
+        int sum = 0;
         for (String f : files)
         {
-            computeItForOneFile(f);
+            sum+=computeItForOneFile(f);
         }
+
+        System.out.println(" ----- Total rides assigned : "+ sum +"-----");
         System.out.println("Hello Worldy -joni");
     }
 
-    public static void computeItForOneFile(final String filename)
+    public static int computeItForOneFile(final String filename)
     {
         final int R, C, F, N, B, T;
         final File outFile = new File(filename+".out");
@@ -206,11 +209,11 @@ public class KrisMain {
                 out.write(v.rides.size()+ridesStr+System.getProperty("line.separator"));
             }
             out.close();
-
+            return sumRidesAssigned;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return -1;
     }
 
     public static int computeCostToStartOfRide(final Vehicle vehicle, final Ride ride)
