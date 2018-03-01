@@ -8,13 +8,13 @@ public class KrisMain {
     public static void main(String[] args) {
         final int R, C, F, N, B, T;
 
-        final String filename = "small.in";
+        final String filename = "./resources/a_example.in";
         BufferedWriter out = null;
         BufferedReader in = null;
         File file;
         final ArrayList<Ride> rides = new ArrayList<Ride>();
         try {
-            file = new File(filename +".out");
+            file = new File(filename);
             in = new BufferedReader(new FileReader(file));
             //TODO: READ THE FUN FILE!
             String line = null;
@@ -35,8 +35,10 @@ public class KrisMain {
             N = Integer.parseInt(tokens[3]);
             B = Integer.parseInt(tokens[4]);
             T = Integer.parseInt(tokens[5]);
+
             do {
                 line = in.readLine();
+                if (line == null) break;
                 //It's any of the non-first lines
                 final Ride r = new Ride();
                 /*
@@ -55,7 +57,7 @@ public class KrisMain {
                 r.startStep = Integer.parseInt(tokens[4]);
                 r.latestFinish = Integer.parseInt(tokens[5]);
                 r.updatePoints();
-                r.updateLatestStartTime();
+                r.updateLatestStartTimes();
                 rides.add(r);
             } while(line != null);
             tokens = null;
@@ -95,9 +97,34 @@ public class KrisMain {
             for (int rideNbr = 0; rideNbr < N; rideNbr++)
             {
                 final Ride ride = rides.get(rideNbr);
-                for (Vehicle v : vehicles)
+                for (Vehicle vehicle : vehicles)
                 {
+                    // Need to check if vehicle can be there on time for the start
+                    // Done as follows:
+                    // For every vehicle, compute if it is available at the time
+                    // it can reach the starting point
+                    // aka. ride's start time - cost of vehicle getting there
 
+                    //Shouldn't be necessary to check for range of times b/c we have a sorted list of rides
+                    final int costToStart = computeCostToStartOfRide(vehicle, ride);
+                    final int shouldLeaveSoft = ride.startStep - costToStart;
+                    final int shouldLeaveHard = ride.latestStartTime - costToStart;
+                    if (vehicle.isAvailable(shouldLeaveSoft))
+                    {
+                        //Add ride to vehicle
+                        vehicle.rides.add(ride);
+                        //Note when it will be available after this ride
+                        vehicle.whenAvailable = shouldLeaveSoft + costToStart + ride.cost;
+                        vehicle.posX = ride.endX;
+                        vehicle.posY = ride.endY;
+                        break;
+                    }
+                    else if (vehicle.isAvailable(shouldLeaveHard))
+                    {
+                        // Define when exactly we want to leave
+                        // B/c now we have a larger range when to go
+                        vehicle.whenAvailable += costToStart + ride.cost;
+                    }
                 }
 
             }
@@ -116,9 +143,19 @@ public class KrisMain {
         System.out.println("Hello Worldy -joni");
     }
 
-
-    public int distance(Vehicle v, int x, int y)
+    public static int computeCostToStartOfRide(final Vehicle vehicle, final Ride ride)
     {
-        return Math.abs(v.posX - x) + Math.abs(v.posY - y);
+        //Get the distance from current pos to wherever ride's start is
+        return distance(vehicle.posX, vehicle.posY, ride.startX, ride.startY);
+    }
+
+    public static int distance(Vehicle v, int x, int y)
+    {
+        return distance(v.posX, v.posY, x, y);
+    }
+
+    public static int distance(int x1, int y1, int x2, int y2)
+    {
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
 }

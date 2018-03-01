@@ -11,22 +11,25 @@ public class Ride implements Comparable, Serializable {
     public int latestFinish = -1;
     public int cost = -1;
     public int latestStartTime = -1;
+    public int bonusLatestStartTime = -1;
     public void updatePoints()
     {
         this.cost = Math.abs(startX-endX) + Math.abs(startY - endY);
     }
 
-    public void updateLatestStartTime()
+    public void updateLatestStartTimes()
     {
         latestStartTime = latestFinish - cost;
+        bonusLatestStartTime = startStep + cost;
     }
     @Override
     public int compareTo(Object o) {
         // Sort by latest starting time
         if (o instanceof Ride)
         {
-            Ride castO = (Ride) o;
-            return castO.latestStartTime - latestStartTime;
+            final Ride castO = (Ride) o;
+            //If data is consistent, this should lead to bonsuLatestStartTime to always be taken
+            return Math.min(castO.latestStartTime, castO.bonusLatestStartTime) - Math.min(latestStartTime, bonusLatestStartTime);
         }
         return 0;
     }

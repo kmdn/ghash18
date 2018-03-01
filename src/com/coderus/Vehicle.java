@@ -14,7 +14,7 @@ public class Vehicle {
 
     public boolean isAvailable(final int step)
     {
-        return step > whenAvailable;
+        return step >= whenAvailable;
     }
 
     public void updateWhenAvailable(final Ride r)
