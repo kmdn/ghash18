@@ -158,4 +158,28 @@ public class KrisMain {
     {
         return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
+
+    private int computePoints(Vehicle vehicle, Ride ride){
+        int distance = manhattanDistance(vehicle.posX, vehicle.posY,ride.startX, ride.startY); //distance = time to get there
+        int startStep = distance + vehicle.whenAvailable;
+        if (startStep<ride.startStep){
+            startStep = ride.startStep;
+        }
+        int finishStep = startStep + distance;
+
+        if (finishStep<ride.latestFinish) {
+            if (startStep == ride.startStep) {
+                return ride.points + 2;
+            } else {
+                return ride.points;
+            }
+        } else {
+            return 0;
+        }
+
+    }
+
+    private int manhattanDistance(int xA, int yA, int xB, int yB){
+        return Math.abs(xA-xB) + Math.abs(yA-yB);
+    }
 }
