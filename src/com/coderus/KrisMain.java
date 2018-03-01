@@ -9,6 +9,7 @@ public class KrisMain {
         final int R, C, F, N, B, T;
 
         final String filename = "./resources/a_example.in";
+        final File outFile = new File(filename+".out");
         BufferedWriter out = null;
         BufferedReader in = null;
         File file;
@@ -66,13 +67,8 @@ public class KrisMain {
                 file.createNewFile();
             }
 
-            //Create all vehicles we have
-            ArrayList<Vehicle> vehicles = new ArrayList<>();
-            for (int i = 0; i < F; i++)
-            {
-                final Vehicle v = new Vehicle();
-                vehicles.add(v);
-            }
+            //Vehicles are created on the fly
+            final ArrayList<Vehicle> vehicles = new ArrayList<>();
 
             /*
             FIRST LINE
@@ -97,6 +93,7 @@ public class KrisMain {
             for (int rideNbr = 0; rideNbr < N; rideNbr++)
             {
                 final Ride ride = rides.get(rideNbr);
+                boolean noneAvailable = true;
                 for (Vehicle vehicle : vehicles)
                 {
                     // Need to check if vehicle can be there on time for the start
@@ -109,6 +106,8 @@ public class KrisMain {
                     final int costToStart = computeCostToStartOfRide(vehicle, ride);
                     final int shouldLeaveSoft = ride.startStep - costToStart;
                     final int shouldLeaveHard = ride.latestStartTime - costToStart;
+
+                    //OLD Vehicle Assignment
                     if (vehicle.isAvailable(shouldLeaveSoft))
                     {
                         //Add ride to vehicle
@@ -117,14 +116,44 @@ public class KrisMain {
                         vehicle.whenAvailable = shouldLeaveSoft + costToStart + ride.cost;
                         vehicle.posX = ride.endX;
                         vehicle.posY = ride.endY;
+                        noneAvailable = false;
                         break;
                     }
-                    else if (vehicle.isAvailable(shouldLeaveHard))
+                    else if (vehicles.size()>=F-1 && vehicle.isAvailable(shouldLeaveHard))
                     {
+                        //Add ride to vehicle
+                        vehicle.rides.add(ride);
+                        vehicle.posX = ride.endX;
+                        vehicle.posY = ride.endY;
+                        //Note when it will be available after this ride
                         // Define when exactly we want to leave
                         // B/c now we have a larger range when to go
                         vehicle.whenAvailable += costToStart + ride.cost;
+                        noneAvailable = false;
+                        break;
                     }
+                }
+
+                //NEW Vehicle Assignment
+                if (noneAvailable && vehicles.size() < F)
+                {
+                    final Vehicle vehicle = new Vehicle();
+                    final int costToStart = computeCostToStartOfRide(vehicle, ride);
+                    if (costToStart > ride.latestStartTime)
+                    {
+                        //Impossible to get there on time
+                        break;
+                    }
+                    //Add ride to vehicle
+                    vehicle.rides.add(ride);
+                    vehicle.posX = ride.endX;
+                    vehicle.posY = ride.endY;
+                    // Note when it will be available after this ride
+                    // Define when exactly we want to leave
+                    // B/c now we have a larger range when to go
+                    vehicle.whenAvailable = ride.startStep + ride.cost;
+                    noneAvailable = false;
+                    vehicles.add(vehicle);
                 }
 
             }
@@ -133,9 +162,17 @@ public class KrisMain {
 
 
             //TODO: WRITE OUTPUT TO FILE
-            out = new BufferedWriter(new FileWriter(file));
+            out = new BufferedWriter(new FileWriter(outFile));
             out.write("THIS IS MY OUTPUT");
             out.close();
+            System.out.println("Vehicles used: "+vehicles.size());
+            int sumRidesAssigned = 0;
+            for (Vehicle v : vehicles)
+            {
+                sumRidesAssigned += v.rides.size();
+            }
+            System.out.println("Total rides assigned: "+sumRidesAssigned);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
