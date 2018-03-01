@@ -33,8 +33,8 @@ public class Ride implements Comparable, Serializable {
 
             //11kk score
             //return Math.min(castO.latestStartTime, castO.bonusLatestStartTime) - Math.min(latestStartTime, bonusLatestStartTime);
-
-            return castO.startStep - startStep;//e goes up, but all others go down
+            return castO;
+            //return castO.startStep - startStep;//e goes up, but all others go down
 
         }
         return 0;

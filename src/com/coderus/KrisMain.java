@@ -178,12 +178,12 @@ public class KrisMain {
 
             //Gui's code START
             if (false) {
-                final ArrayList<Vehicle> vehicles = new ArrayList<>();
+                final ArrayList<Vehicle> veh = new ArrayList<>();
                 for (int i = 0; i < F; i++) {
                     Vehicle v = new Vehicle();
-                    vehicles.add(v);
+                    veh.add(v);
                 }
-                greedy(vehicles, rides);
+                greedy(veh, rides);
             }
             //Gui's code END
 
