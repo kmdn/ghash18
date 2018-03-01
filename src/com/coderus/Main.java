@@ -16,7 +16,7 @@ public class Main {
 
         try {
             file = new File(filename +".out");
-            in = new FileInputStream(filename + "in");
+            in = new FileInputStream(file);
             //TODO: READ THE F'ING FILE
 
             in.close();
