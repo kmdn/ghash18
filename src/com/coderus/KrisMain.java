@@ -90,7 +90,7 @@ public class KrisMain {
 
              */
             // Assign cars to rides
-            Collections.sort(rides);
+          /*  Collections.sort(rides);
             for (int rideNbr = 0; rideNbr < N; rideNbr++)
             {
                 final Ride ride = rides.get(rideNbr);
@@ -157,11 +157,11 @@ public class KrisMain {
                     vehicles.add(vehicle);
                 }
 
-            }
+            }*/
 
+          greedy(vehicles,rides);
 
-
-
+          
             //TODO: WRITE OUTPUT TO FILE
             out = new BufferedWriter(new FileWriter(outFile));
             out.write("THIS IS MY OUTPUT");
@@ -197,7 +197,7 @@ public class KrisMain {
         return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
 
-    private int[] computePoints(Vehicle vehicle, Ride ride){
+    private static int[] computePoints(Vehicle vehicle, Ride ride){
         int solution[] = new int[2];
         int distance = manhattanDistance(vehicle.posX, vehicle.posY,ride.startX, ride.startY); //distance = time to get there
         int startStep = distance + vehicle.whenAvailable;
@@ -222,18 +222,18 @@ public class KrisMain {
 
     }
 
-    private int manhattanDistance(int xA, int yA, int xB, int yB){
+    private static int manhattanDistance(int xA, int yA, int xB, int yB){
         return Math.abs(xA-xB) + Math.abs(yA-yB);
     }
 
-    private void assignRide(ArrayList<Vehicle> vehicles, ArrayList<Ride> free_rides){
-        Vehicle best_vehicle = vehicles.first();
-        Ride best_ride = free_rides.first();
+    private static void assignRide(ArrayList<Vehicle> vehicles, ArrayList<Ride> free_rides){
+        Vehicle best_vehicle = vehicles.get(0);
+        Ride best_ride = free_rides.get(0);
         int best_end_step = 0;
         int best_points = 0;
         for (Vehicle vehicle : vehicles) {
             for (Ride ride : free_rides) {
-                int[] points_computation = computePoints(vehicle, ride)[0]
+                int[] points_computation = computePoints(vehicle, ride);
                 int points = points_computation[0];
                 int time = points_computation[1];
                 if (points > best_points) {
@@ -256,7 +256,7 @@ public class KrisMain {
         }
     }
 
-    private void greedy(ArrayList<Vehicle> vehicles, ArrayList<Ride> free_rides){
+    private static void greedy(ArrayList<Vehicle> vehicles, ArrayList<Ride> free_rides){
         while (free_rides.size()>0){
             assignRide(vehicles,free_rides);
         }
