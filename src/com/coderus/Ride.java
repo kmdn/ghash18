@@ -32,8 +32,11 @@ public class Ride implements Comparable, Serializable {
             //If data is consistent, this should lead to bonsuLatestStartTime to always be taken
 
             //11kk score
-            //return Math.min(castO.latestStartTime, castO.bonusLatestStartTime) - Math.min(latestStartTime, bonusLatestStartTime);
-            return castO.latestStartTime+castO.bonusLatestStartTime+castO.cost - (latestStartTime+bonusLatestStartTime+cost);
+            return Math.min(castO.latestStartTime, castO.bonusLatestStartTime) - Math.min(latestStartTime, bonusLatestStartTime);
+            //return castO.latestStartTime+castO.bonusLatestStartTime+castO.cost - (latestStartTime+bonusLatestStartTime+cost);
+            //return castO.cost+castO.bonusLatestStartTime - (cost+bonusLatestStartTime);
+            //Improves C(8.09kk), D(2.8kk), E(1.8kk)
+            //return castO.latestFinish - latestFinish;
             //return castO.startStep - startStep;//e goes up, but all others go down
 
         }

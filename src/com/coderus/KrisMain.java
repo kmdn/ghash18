@@ -21,7 +21,7 @@ public class KrisMain {
         }
 
         System.out.println(" ----- Total rides assigned : "+ sum +"-----");
-        System.out.println("Hello Worldy -joni");
+        System.out.println("Hello Worldy - Code'R'Us");
     }
 
     public static int computeItForOneFile(final String filename)
@@ -115,6 +115,9 @@ public class KrisMain {
             {
                 final Ride ride = rides.get(rideNbr);
                 boolean noneAvailable = true;
+                boolean addVehicle = false;
+                Vehicle vehicleToAdd = null;
+
                 for (Vehicle vehicle : vehicles)
                 {
                     // Need to check if vehicle can be there on time for the start
@@ -127,8 +130,9 @@ public class KrisMain {
                     final int costToStart = computeCostToStartOfRide(vehicle, ride);
                     final int shouldLeaveSoft = ride.startStep - costToStart;
                     final int shouldLeaveHard = ride.latestStartTime - costToStart;
-
+                    final int costFromInit = distance(0, 0, ride.startX, ride.startY);
                     //OLD Vehicle Assignment
+                    //Is it available? ; is it closer than a car from 0,0?
                     if (vehicle.isAvailable(shouldLeaveSoft))
                     {
                         //Add ride to vehicle
@@ -142,6 +146,7 @@ public class KrisMain {
                     }
                     else if (vehicles.size()>=F-1 && vehicle.isAvailable(shouldLeaveHard))
                     {
+                        //If there's no other choice, do it when it's the latest possible leaving time!
                         //Add ride to vehicle
                         vehicle.rides.add(ride);
                         vehicle.posX = ride.endX;
