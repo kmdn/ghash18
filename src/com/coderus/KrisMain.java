@@ -23,32 +23,57 @@ public class KrisMain {
         ● f – the latest finish (0 ≤ f ≤ T), (f ≥ s + | − a + | − b|)
 
          */
-        int R, C, F, N, B, T;
+        final int R, C, F, N, B, T;
 
         final String filename = "small.in";
         BufferedWriter out = null;
         BufferedReader in = null;
         File file;
-        final ArrayList<String> lines = new ArrayList<String>();
+        final ArrayList<Ride> rides = new ArrayList<Ride>();
         try {
             String line = null;
             file = new File(filename +".out");
             in = new BufferedReader(new FileReader(file));
             //TODO: READ THE F'ING FILE
-            boolean firstLine = true;
+            line = in.readLine();
+            //Tokenize first line
+            /*
+            R = # rows
+            C = # cols
+            F = # total vehicles
+            N = # rides/travels to make
+            B = Bonus per ride ot start on time
+            T = number of total steps in simulation
+            */
+            String[] tokens = line.split(" ");
+            R = Integer.parseInt(tokens[0]);
+            C = Integer.parseInt(tokens[1]);
+            F = Integer.parseInt(tokens[2]);
+            N = Integer.parseInt(tokens[3]);
+            B = Integer.parseInt(tokens[4]);
+            T = Integer.parseInt(tokens[5]);
             do {
                 line = in.readLine();
-                if (firstLine)
-                {
-                    //Tokenize first line
-
-                    firstLine = false;
-                }
-                else
-                {
-                    //It's any of the non-first lines
-                }
+                //It's any of the non-first lines
+                final Ride r = new Ride();
+                /*
+                    ● a – the row of the start intersection 0 ( ≤ a < R)
+                    ● b – the column of the start intersection 0( ≤ b < C)
+                    ● x – the row of the finish intersection 0( ≤ x < R)
+                    ● y – the column of the finish intersection 0( ≤ y < C)
+                    ● s – the earliest start (0 ≤ s < T) )
+                    ● f – the latest finish (0 ≤ f ≤ T), (f ≥ s + | − a + | − b|)
+                 */
+                tokens = line.split(" ");
+                r.startX = Integer.parseInt(tokens[0]);
+                r.startY = Integer.parseInt(tokens[1]);
+                r.endX = Integer.parseInt(tokens[2]);
+                r.endY = Integer.parseInt(tokens[3]);
+                r.startStep = Integer.parseInt(tokens[4]);
+                r.latestFinish = Integer.parseInt(tokens[5]);
+                rides.add(r);
             } while(line != null);
+            tokens = null;
             in.close();
             if (!file.exists()) {
                 file.createNewFile();
